@@ -1,9 +1,10 @@
 package com.example.store.controller;
 
-
-import com.example.store.model.Product;
+import com.example.store.dto.request.ProductRequest;
+import com.example.store.dto.response.ProductResponse;
 import com.example.store.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,27 +17,33 @@ public class ProductController {
     private final ProductService service;
 
     @PostMapping
-    public Product add(@RequestBody Product product) {
-        return service.save(product);
+    public ResponseEntity<ProductResponse> add(@RequestBody ProductRequest product) {
+        ProductResponse response = service.save(product);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public Product update(@PathVariable Long id, @RequestBody Product product) {
-        return service.update(id, product);
+    public ResponseEntity<ProductResponse> update(
+            @PathVariable Long id,
+            @RequestBody ProductRequest request
+    ) {
+        ProductResponse response = service.update(id, request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public Product getById(@PathVariable Long id) {
-        return service.getById(id);
+    public ResponseEntity<ProductResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @GetMapping
-    public List<Product> getAll() {
-        return service.getAll();
+    public ResponseEntity<List<ProductResponse>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
